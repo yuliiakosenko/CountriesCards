@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MyDataService } from '../services/my-data.service';
-
+import { MyHttpService } from '../services/my-http.service';
 @Component({
   selector: 'app-country-details',
   templateUrl: './country-details.page.html',
@@ -20,8 +20,9 @@ export class CountryDetailsPage implements OnInit {
   countryPopulation: number = 0;
   countryCurency: string = "";
   countryFlagUrl: string = "";
+  weatherInfo: any;
 
-  constructor(private router: Router, private mds: MyDataService) { }
+  constructor(private router: Router, private mds: MyDataService, private mhs: MyHttpService) { }
 
   ngOnInit() {
   }
@@ -48,12 +49,25 @@ export class CountryDetailsPage implements OnInit {
   var firstCurrency = result.currencies[firstCurrencyKey];
   this.countryCurency = firstCurrency.name + " (" + firstCurrency.symbol + ")";
 
+    if(result.latlng && result.latlng.length === 2) {
+   this.getWeather(result.latlng[0], result.latlng[1]);
+}
   }
   
   processLanguages(languages: any): string {
     return Object.values(languages).join(', ');
   }
 
+async getWeather(latitude: number, longitude: number) {
+ 
+    var weatherData = await this.mhs.getWeather(latitude, longitude);
+    this.weatherInfo = this.processWeather(weatherData); 
 
+}
+  
+ processWeather(weatherData: any): string {
+  return weatherData.data.description;
+}
+  
 
 }

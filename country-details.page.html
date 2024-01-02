@@ -13,21 +13,25 @@
 
 
 
-<ion-card>
-  <img src={{countryFlagUrl}} />
-  <ion-card-header>
-    <ion-card-title>{{countryName}}</ion-card-title>
-    <ion-card-subtitle>Capital: {{countryCapital}}</ion-card-subtitle>
-  </ion-card-header>
-    
-  <ion-card-content>
-    <p>Languages:{{countryLanguages}}</p>
-    <p>Population: {{countryPopulation}}</p>
-    <p>Currency: {{countryCurency}}</p>
-    
-  </ion-card-content>
-</ion-card>
+  <ion-card>
+    <img src={{countryFlagUrl}} />
+    <ion-card-header>
+      <ion-card-title>{{countryName}}</ion-card-title>
+      <ion-card-subtitle>Capital: {{countryCapital}}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Languages:{{countryLanguages}}</p>
+      <p>Population: {{countryPopulation}}</p>
+      <p>Currency: {{countryCurency}}</p>
+    <div>{{ weatherInfo }}</div>
+
+    </ion-card-content>
+  </ion-card>
 
 
-  <ion-button  (click)="openHome()">Home</ion-button>
+  <ion-button (click)="openHome()">Home</ion-button>
 </ion-content>
+
+
+  
