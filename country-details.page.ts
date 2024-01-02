@@ -22,7 +22,7 @@ export class CountryDetailsPage implements OnInit {
   countryFlagUrl: string = "";
   weatherInfo: any;
 
-  constructor(private router: Router, private mds: MyDataService, private httpService: MyHttpService) { }
+  constructor(private router: Router, private mds: MyDataService, private mhs: MyHttpService) { }
 
   ngOnInit() {
   }
@@ -59,13 +59,15 @@ export class CountryDetailsPage implements OnInit {
   }
 
 async getWeather(latitude: number, longitude: number) {
-  
-    const weatherData = await this.httpService.getWeather(latitude, longitude);
-    this.weatherInfo = weatherData;
-  
+ 
+    var weatherData = await this.mhs.getWeather(latitude, longitude);
+    this.weatherInfo = this.processWeather(weatherData); 
+
 }
   
-
+ processWeather(weatherData: any): string {
+  return weatherData.data.description;
+}
   
 
 }
