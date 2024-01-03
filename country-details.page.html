@@ -21,10 +21,16 @@
     </ion-card-header>
 
     <ion-card-content>
+      <p>{{ weatherInfo }}</p>
       <p>Languages:{{countryLanguages}}</p>
       <p>Population: {{countryPopulation}}</p>
-      <p>Currency: {{countryCurency}}</p>
-    <div>{{ weatherInfo }}</div>
+
+      <ion-input label="Enter {{countryCurency}} amount" type="number" [(ngModel)]="amount" ></ion-input>
+      <ion-button  (click)="convertCurrency()" >Covert to EUR</ion-button>
+
+     
+      <p>{{amount}} {{countryCurency}} = {{money}} EUR</p>
+    
 
     </ion-card-content>
   </ion-card>

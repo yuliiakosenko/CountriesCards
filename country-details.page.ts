@@ -21,38 +21,48 @@ export class CountryDetailsPage implements OnInit {
   countryCurency: string = "";
   countryFlagUrl: string = "";
   weatherInfo: any;
+  currencyInfo: any;
+  money!: number;
+
+  amount!: number;
 
   constructor(private router: Router, private mds: MyDataService, private mhs: MyHttpService) { }
 
   ngOnInit() {
+    
   }
 
   openHome() { 
     this.router.navigate(['/home'])
   }
 
+  convertCurrency() { 
+    this.money = this.amount * this.currencyInfo;
+    
+  }
+
   ionViewWillEnter() { 
     this.getCountryDetails();
     
   }
-  async getCountryDetails() { 
-    var result = await this.mds.get("myCountry")
-    console.log(JSON.stringify(result))
-    this.countryName = result.name.official;
-    this.countryCapital = result.capital;
-    this.countryLanguages = this.processLanguages(result.languages); 
-    this.countryPopulation = result.population;
-    this.countryFlagUrl = result.flags.png;
-    
+ async getCountryDetails() { 
+  var result = await this.mds.get("myCountry");
+  
+  this.countryName = result.name.official;
+  this.countryCapital = result.capital;
+  this.countryLanguages = this.processLanguages(result.languages); 
+  this.countryPopulation = result.population;
+  this.countryFlagUrl = result.flags.png;
 
-  var firstCurrencyKey = Object.keys(result.currencies)[0];
-  var firstCurrency = result.currencies[firstCurrencyKey];
-  this.countryCurency = firstCurrency.name + " (" + firstCurrency.symbol + ")";
+  var firstCurrency = Object.keys(result.currencies)[0];
+   this.countryCurency = firstCurrency;
+   this.getRate(firstCurrency);
 
-    if(result.latlng && result.latlng.length === 2) {
-   this.getWeather(result.latlng[0], result.latlng[1]);
-}
+  if(result.latlng && result.latlng.length === 2) {
+    this.getWeather(result.latlng[0], result.latlng[1]);
   }
+}
+
   
   processLanguages(languages: any): string {
     return Object.values(languages).join(', ');
@@ -69,5 +79,13 @@ async getWeather(latitude: number, longitude: number) {
   return weatherData.data.description;
 }
   
+  async getRate(firstCurrency: string) { 
+    var rateData = await this.mhs.getExchangeRate(firstCurrency);
+    this.currencyInfo = this.processRate(rateData);
+  }
+
+  processRate(rateData: any): string { 
+    return rateData.data.conversion_rate;
+  }
 
 }
