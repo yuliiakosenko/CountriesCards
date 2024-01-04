@@ -21,22 +21,40 @@
     </ion-card-header>
 
     <ion-card-content>
+
+        
+
       <p>{{ weatherInfo }}</p>
       <p>Languages:{{countryLanguages}}</p>
       <p>Population: {{countryPopulation}}</p>
 
       <ion-input label="Enter {{countryCurency}} amount" type="number" [(ngModel)]="amount" ></ion-input>
-      <ion-button  (click)="convertCurrency()" >Covert to EUR</ion-button>
+      <ion-button  (click)="convertCurrency() " [disabled]="!amount" >Covert to EUR</ion-button>
 
      
-      <p>{{amount}} {{countryCurency}} = {{money}} EUR</p>
+      <p  >{{amount}} {{countryCurency}} = {{money}} EUR</p>
     
 
     </ion-card-content>
+<ion-button (click)="openHome()">Home</ion-button> 
+<ion-button id="present-alert" fill="outline">Click Me to Get Random Fact</ion-button>
+<ion-alert trigger="present-alert" header="Random Fact" message="{{funFact}}" [buttons]="alertButtons"></ion-alert>
+
   </ion-card>
 
+<ion-card *ngFor="let newsItem of news">
+  <ion-card-header>
+    <ion-card-title>{{ newsItem.title }}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    {{ newsItem.description }}
+  </ion-card-content>
+</ion-card>
 
-  <ion-button (click)="openHome()">Home</ion-button>
+
+
+ 
+  
 </ion-content>
 
 

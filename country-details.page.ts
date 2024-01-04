@@ -5,15 +5,20 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MyDataService } from '../services/my-data.service';
 import { MyHttpService } from '../services/my-http.service';
+
 @Component({
   selector: 'app-country-details',
   templateUrl: './country-details.page.html',
   styleUrls: ['./country-details.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule],
+
+
+
+
 })
 export class CountryDetailsPage implements OnInit {
-
+alertButtons = ['Thank you!'];
   countryName: string = "";
   countryCapital: string = "";
   countryLanguages: string = "";
@@ -24,7 +29,13 @@ export class CountryDetailsPage implements OnInit {
   currencyInfo: any;
   money!: number;
 
+  news: any[] = [];
+
   amount!: number;
+  funFact: string = "";
+  fact: string = "";
+
+  keyword: string = "";
 
   constructor(private router: Router, private mds: MyDataService, private mhs: MyHttpService) { }
 
@@ -38,6 +49,7 @@ export class CountryDetailsPage implements OnInit {
 
   convertCurrency() { 
     this.money = this.amount * this.currencyInfo;
+   
     
   }
 
@@ -48,11 +60,15 @@ export class CountryDetailsPage implements OnInit {
  async getCountryDetails() { 
   var result = await this.mds.get("myCountry");
   
-  this.countryName = result.name.official;
+   this.countryName = result.name.official;
+   this.keyword = result.name.common;
+   console.log("Keyword for news:", this.keyword);
   this.countryCapital = result.capital;
   this.countryLanguages = this.processLanguages(result.languages); 
   this.countryPopulation = result.population;
-  this.countryFlagUrl = result.flags.png;
+   this.countryFlagUrl = result.flags.png;
+   this.fetchNews();
+   console.log("News data:", this.news);
 
   var firstCurrency = Object.keys(result.currencies)[0];
    this.countryCurency = firstCurrency;
@@ -61,6 +77,10 @@ export class CountryDetailsPage implements OnInit {
   if(result.latlng && result.latlng.length === 2) {
     this.getWeather(result.latlng[0], result.latlng[1]);
   }
+   
+   
+   var fact = await this.mhs.getUselessFact();
+   this.funFact = fact.data.text;
 }
 
   
@@ -84,8 +104,23 @@ async getWeather(latitude: number, longitude: number) {
     this.currencyInfo = this.processRate(rateData);
   }
 
+ 
+
   processRate(rateData: any): string { 
     return rateData.data.conversion_rate;
   }
+
+ async getNews() { 
+  var newsData = await this.mhs.getNews(this.keyword);
+  this.news = newsData.news; 
+}
+
+  processNews(newsData: any): string { 
+    return newsData.data.news.title;
+  }
+  
+  async fetchNews() {
+    this.news = await this.mhs.getNews(this.keyword);
+}
 
 }

@@ -34,7 +34,7 @@ export class HomePage implements OnInit{
   async getCountries() { 
     var result = await this.mhs.get(this.options)
     this.countries = result.data;
-    console.log(JSON.stringify(this.countries))
+    
   }
 
   async openCountryDetails(country: any) { 
